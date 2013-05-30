@@ -1,0 +1,50 @@
+[ ca ]
+default_ca = ca
+
+database = index.txt
+unique_subject = no
+new_certs_dir = certs
+certificate = ca.crt.pem
+serial = serial.txt
+private_key = ca.key.pem
+
+default_days = 1826
+default_crl_days = 30
+default_md = sha1
+copy_extensions = none
+policy = policy_default
+
+
+# by default, optionally include these two DN fields from the CSR and discard
+# the rest. see http://www.openssl.org/docs/apps/ca.html#POLICY_FORMAT for more
+# information on what the policy can be.
+[ policy_default ]
+commonName = optional
+emailAddress = optional
+
+# when signing the initial CA certificate, include all of the fields that
+# `openssl req` prompts for.
+[ policy_ca ]
+countryName = optional
+stateOrProvinceName = optional
+localityName = optional
+organizationName = optional
+organizationalUnitName = optional
+commonName = optional
+emailAddress = optional
+
+
+[ ext_servers ]
+basicConstraints = CA:FALSE
+extendedKeyUsage = serverAuth
+
+[ ext_clients ]
+basicConstraints = CA:FALSE
+extendedKeyUsage = clientAuth,emailProtection
+
+# this section should only be used by `init.sh` unless you really know what
+# you're doing.
+[ ext_ca ]
+basicConstraints = CA:TRUE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer:always
